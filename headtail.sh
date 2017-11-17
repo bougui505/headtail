@@ -18,6 +18,11 @@ if [ $# -lt 1 ]; then
 	exit
 fi
 
+if [[ $1 = "-h" ]]; then
+	usage
+	exit
+fi
+
 if [[ $1 = "-n" ]]; then
 	N=$2
 	FILENAME=$3
