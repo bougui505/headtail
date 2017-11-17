@@ -8,9 +8,11 @@
 usage ()
 {
 	echo "Usage"
-	echo "$0 filename"
+	echo "headtail filename"
 	echo "Print the first and the last 10 lines of the file"
 	echo "    -n NUM    print the first and the last NUM lines"
+	echo "    -d        Do not print the delimiter '[...]' between the head
+			    and the tail of the file"
 }
 
 if [ $# -lt 1 ]; then
@@ -18,17 +20,25 @@ if [ $# -lt 1 ]; then
 	exit
 fi
 
-if [[ $1 = "-h" ]]; then
-	usage
-	exit
-fi
+N=10
+DELIM=1
+for i in "$@"; do
+	case $i in
+		"-h")
+			usage
+			exit
+			;;
+		"-n")
+			shift # shift the counter of $i variables ($i becomes $i+1)
+			N=$1
+			shift
+			;;
+		"-d")
+			DELIM=0
+			shift
+			;;
+	esac
+done
+FILENAME=$1
 
-if [[ $1 = "-n" ]]; then
-	N=$2
-	FILENAME=$3
-else
-	N=10
-	FILENAME=$1
-fi
-
-awk -v N=$N '{i+=1; data[i]=$0} END{for (j=1; j<=N; j++){print data[j]}; print "[...]"; for (k=i-N+1;k<=i;k++){print data[k]}}' $FILENAME
+awk -v N=$N -v DELIM=$DELIM '{i+=1; data[i]=$0} END{for (j=1; j<=N; j++){print data[j]}; if (DELIM==1){print "[...]"}; for (k=i-N+1;k<=i;k++){print data[k]}}' $FILENAME
