@@ -29,7 +29,7 @@ for i in "$@"; do
 			exit
 			;;
 		"-n")
-			shift # shift the counter of $i variables ($i becomes $i+1)
+			shift # shift the counter of $1 variables ($1 becomes $2) and so on for $2 ...
 			N=$1
 			shift
 			;;
